@@ -1,0 +1,19 @@
+plugins {
+    id 'java'
+}
+
+group 'dev.klepto.unreflect'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'one.util:streamex:0.8.1'
+    implementation 'org.ow2.asm:asm:9.4'
+    implementation 'com.google.guava:guava:31.1-jre'
+}
