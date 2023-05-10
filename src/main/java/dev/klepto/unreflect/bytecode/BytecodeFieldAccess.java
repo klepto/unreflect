@@ -30,6 +30,11 @@ public class BytecodeFieldAccess implements FieldAccess {
     }
 
     @Override
+    public FieldAccess bind(Object object) {
+        return new BytecodeFieldAccess((ReflectionFieldAccess) delegate.bind(object), accessor);
+    }
+
+    @Override
     public <T> T get() {
         return (T) accessor.get(object());
     }
@@ -42,8 +47,10 @@ public class BytecodeFieldAccess implements FieldAccess {
     private interface Overrides {
         void unreflect();
         void reflect();
+        void bind(Object object);
         void get();
         void set(Object value);
+
     }
 
 }

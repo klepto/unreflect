@@ -32,6 +32,11 @@ public class BytecodeMethodAccess implements MethodAccess {
     }
 
     @Override
+    public MethodAccess bind(Object object) {
+        return new BytecodeMethodAccess((ReflectionMethodAccess) delegate.bind(object), accessor);
+    }
+
+    @Override
     public <T> T invoke(Object... args) {
         return (T) accessor.invoke(object(), args);
     }
@@ -39,6 +44,7 @@ public class BytecodeMethodAccess implements MethodAccess {
     private interface Overrides {
         void unreflect();
         void reflect();
+        void bind(Object object);
         void invoke(Object... args);
     }
 
