@@ -41,8 +41,8 @@ public class JdkInternals {
         methodB.setAccessible(false);
 
         for (int index = 0; index < Byte.MAX_VALUE; index++) {
-            val valueA = (boolean) unsafe.getBoolean(methodA, index);
-            val valueB = (boolean) unsafe.getBoolean(methodB, index);
+            val valueA = unsafe.getBoolean(methodA, (long) index);
+            val valueB = unsafe.getBoolean(methodB, (long) index);
             if (valueA != valueB) {
                 return index;
             }
@@ -54,9 +54,9 @@ public class JdkInternals {
     @SneakyThrows
     private static Unsafe getUnsafe() {
         try {
-            val theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
-            theUnsafe.setAccessible(true);
-            return (Unsafe) theUnsafe.get(null);
+            val theUnsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafeField.setAccessible(true);
+            return (Unsafe) theUnsafeField.get(null);
         } catch (Throwable err) {
             throw new RuntimeException("Couldn't acquire the Unsafe in current JDK version.");
         }
