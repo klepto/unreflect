@@ -19,7 +19,7 @@ public class JdkInternals {
     private static final Unsafe unsafe;
     private static final int accessibleFlagIndex;
     @Getter private static final Class<?> magicAccessorImpl;
-    @Getter private static final Class<?> classDefiner;
+    private static final Class<?> classDefiner;
     private static final Method defineClassMethod;
 
     static {
@@ -110,7 +110,7 @@ public class JdkInternals {
      * @return true if object is flagged as accessible
      */
     public static boolean isAccessible(AccessibleObject object) {
-        return unsafe.getBoolean(object, accessibleFlagIndex);
+        return unsafe.getBoolean(object, (long) accessibleFlagIndex);
     }
 
     /**
@@ -122,7 +122,7 @@ public class JdkInternals {
      * @param accessible the accessible flag
      */
     public static void setAccessible(AccessibleObject object, boolean accessible) {
-        unsafe.putBoolean(object, accessibleFlagIndex, accessible);
+        unsafe.putBoolean(object, (long) accessibleFlagIndex, accessible);
     }
 
     /**
