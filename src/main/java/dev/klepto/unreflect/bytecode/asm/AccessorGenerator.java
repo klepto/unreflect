@@ -130,7 +130,8 @@ public class AccessorGenerator {
         mv.visitInsn(ATHROW);
 
         mv.visitLabel(executionLabel);
-        if (member instanceof Constructor constructor) {
+        if (member instanceof Constructor) {
+            val constructor = (Constructor<?>) member;
             val constructorOwner = Type.getInternalName(constructor.getDeclaringClass());
             val constructorDescriptor = Type.getConstructorDescriptor(constructor);
             ;

@@ -244,16 +244,16 @@ public class UnreflectType implements Named {
      * @return the type representation of a given value
      */
     public static UnreflectType of(Object object) {
-        if (object instanceof Class<?> type) {
-            return of(type);
+        if (object instanceof Class<?>) {
+            return of((Class<?>) object);
         }
 
-        if (object instanceof Type type) {
-            return of(type);
+        if (object instanceof Type) {
+            return of((Type) object);
         }
 
-        if (object instanceof TypeToken<?> type) {
-            return of(type);
+        if (object instanceof TypeToken<?>) {
+            return of((TypeToken<?>) object);
         }
 
         return of(object.getClass());
