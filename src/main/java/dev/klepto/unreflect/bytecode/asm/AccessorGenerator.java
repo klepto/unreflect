@@ -5,6 +5,7 @@ import dev.klepto.unreflect.util.JdkInternals;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.val;
+import one.util.streamex.StreamEx;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -12,6 +13,9 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.objectweb.asm.ClassWriter.COMPUTE_MAXS;
@@ -32,10 +36,10 @@ public class AccessorGenerator {
     private final String superClass = JdkInternals.getMagicAccessorImpl().getName();
 
     @SneakyThrows
-    public MutableAccessor generateMutableAccessor(Class<?> context, Field field) {
+    public MutableAccessor generateMutableAccessor(Field field) {
         val className = getNextClassName();
         val cw = new ClassWriter(COMPUTE_MAXS);
-        generateHeader(cw, className, MutableAccessor.class.getName());
+        generateHeader(cw, className, Function.class.getName(), BiConsumer.class.getName());
 
         val fieldOwner = Type.getInternalName(field.getDeclaringClass());
         val fieldName = field.getName();
@@ -47,7 +51,7 @@ public class AccessorGenerator {
         {
             val methodDescriptor = Type.getMethodDescriptor(Type.getType(Object.class), Type.getType(Object.class));
             val fieldOpcode = Modifier.isStatic(fieldModifiers) ? GETSTATIC : GETFIELD;
-            val mv = cw.visitMethod(ACC_PUBLIC, "get", methodDescriptor, null, null);
+            val mv = cw.visitMethod(ACC_PUBLIC, "apply", methodDescriptor, null, null);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitTypeInsn(CHECKCAST, fieldOwner);
             mv.visitFieldInsn(fieldOpcode, fieldOwner, fieldName, fieldDescriptor);
@@ -67,7 +71,7 @@ public class AccessorGenerator {
                     Type.getType(Object.class)
             );
             val fieldOpcode = Modifier.isStatic(field.getModifiers()) ? PUTSTATIC : PUTFIELD;
-            val mv = cw.visitMethod(ACC_PUBLIC, "set", methodDescriptor, null, null);
+            val mv = cw.visitMethod(ACC_PUBLIC, "accept", methodDescriptor, null, null);
             mv.visitVarInsn(ALOAD, 1);
             mv.visitTypeInsn(CHECKCAST, fieldOwner);
             mv.visitVarInsn(ALOAD, 2);
@@ -86,32 +90,31 @@ public class AccessorGenerator {
         cw.visitEnd();
 
         // Load accessor.
-        val classLoader = context.getClassLoader();
-        val bytecode = cw.toByteArray();
-        return (MutableAccessor) loadAccessor(classLoader, className, bytecode);
+        val accessor = loadAccessor(field.getDeclaringClass(), className, cw.toByteArray());
+        return new MutableAccessor((Function) accessor, (BiConsumer) accessor);
     }
 
-    public InvokableAccessor generateInvokableAccessor(Class<?> context, Method method) {
-        return _generateInvokableAccessor(context, method);
+    public InvokableAccessor generateInvokableAccessor(Method method) {
+        return _generateInvokableAccessor(method);
     }
 
-    public InvokableAccessor generateInvokableAccessor(Class<?> context, Constructor<?> constructor) {
-        return _generateInvokableAccessor(context, constructor);
+    public InvokableAccessor generateInvokableAccessor(Constructor<?> constructor) {
+        return _generateInvokableAccessor(constructor);
     }
 
-    private InvokableAccessor _generateInvokableAccessor(Class<?> context, Member member) {
+    private InvokableAccessor _generateInvokableAccessor(Member member) {
         checkArgument(member instanceof Constructor<?> || member instanceof Method);
 
         val className = getNextClassName();
         val cw = new ClassWriter(COMPUTE_MAXS);
-        generateHeader(cw, className, InvokableAccessor.class.getName());
+        generateHeader(cw, className, BiFunction.class.getName());
 
         val invokeDescriptor = Type.getMethodDescriptor(
                 Type.getType(Object.class),
                 Type.getType(Object.class),
-                Type.getType(Object[].class)
+                Type.getType(Object.class)
         );
-        val mv = cw.visitMethod(ACC_PUBLIC + ACC_VARARGS, "invoke", invokeDescriptor, null, null);
+        val mv = cw.visitMethod(ACC_PUBLIC + ACC_INTERFACE, "apply", invokeDescriptor, null, null);
 
         val parameterCount = member instanceof Constructor
                 ? ((Constructor<?>) member).getParameterCount()
@@ -120,6 +123,7 @@ public class AccessorGenerator {
         val executionLabel = new Label();
 
         mv.visitVarInsn(ALOAD, 2);
+        mv.visitTypeInsn(CHECKCAST, "[Ljava/lang/Object;");
         mv.visitInsn(ARRAYLENGTH);
         mv.visitLdcInsn(parameterCount);
         mv.visitJumpInsn(IF_ICMPEQ, executionLabel);
@@ -134,7 +138,6 @@ public class AccessorGenerator {
             val constructor = (Constructor<?>) member;
             val constructorOwner = Type.getInternalName(constructor.getDeclaringClass());
             val constructorDescriptor = Type.getConstructorDescriptor(constructor);
-            ;
             val constructorParameters = constructor.getParameters();
 
             mv.visitTypeInsn(NEW, constructorOwner);
@@ -179,14 +182,13 @@ public class AccessorGenerator {
         cw.visitEnd();
 
         // Load accessor.
-        val classLoader = context.getClassLoader();
-        val bytecode = cw.toByteArray();
-        return (InvokableAccessor) loadAccessor(classLoader, className, bytecode);
+        val accessor = loadAccessor(member.getDeclaringClass(), className, cw.toByteArray());
+        return new InvokableAccessor((BiFunction) accessor);
     }
 
     @SneakyThrows
-    public Object loadAccessor(ClassLoader classLoader, String className, byte[] bytecode) {
-        val accessorClass = JdkInternals.defineClass(classLoader, className, bytecode);
+    public Object loadAccessor(Class<?> context, String className, byte[] bytecode) {
+        val accessorClass = JdkInternals.defineClass(context.getClassLoader(), className, bytecode);
         return JdkInternals.allocateInstance(accessorClass);
     }
 
@@ -195,14 +197,16 @@ public class AccessorGenerator {
         return baseClass + accessorIndex.getAndIncrement();
     }
 
-    public void generateHeader(ClassWriter cw, String className, String interfaceName) {
+    public void generateHeader(ClassWriter cw, String className, String... interfaceNames) {
+        val interfaces = StreamEx.of(interfaceNames).map(AccessorGenerator::getInternal).toArray(String.class);
+
         cw.visit(
                 V1_8,
                 ACC_PUBLIC,
                 getInternal(className),
                 null,
                 getInternal(superClass),
-                new String[]{getInternal(interfaceName)}
+                interfaces
         );
 
         val mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
@@ -215,6 +219,7 @@ public class AccessorGenerator {
 
     public void generateArrayParameter(MethodVisitor mv, int arraySlot, int valueIndex, Class<?> parameterType) {
         mv.visitVarInsn(ALOAD, arraySlot);
+        mv.visitTypeInsn(CHECKCAST, "[Ljava/lang/Object;");
         mv.visitLdcInsn(valueIndex);
         mv.visitInsn(AALOAD);
         if (parameterType.isPrimitive()) {

@@ -1,15 +1,28 @@
 package dev.klepto.unreflect.bytecode.asm;
 
 
+import lombok.Value;
+
+import java.util.function.BiConsumer;
+import java.util.function.Function;
+
 /**
- * Implements direct access to a field of class. Equivalent of defining a setter and a getter.
+ * Contains implementations of direct access to a field of class.
  *
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  */
-public interface MutableAccessor {
+@Value
+public class MutableAccessor {
 
-    Object get(Object object);
+    Function getter;
+    BiConsumer setter;
 
-    void set(Object object, Object value);
+    public Object get(Object object) {
+        return getter.apply(object);
+    }
+
+    public void set(Object object, Object value) {
+        setter.accept(object, value);
+    }
 
 }
