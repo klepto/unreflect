@@ -1,0 +1,68 @@
+apply plugin: 'java-library'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+group = 'dev.klepto.unreflect'
+archivesBaseName = 'unreflect'
+version = '1.0'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'unreflect'
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'unreflect'
+                description = 'Small but dangerously powerful wrapper of Reflection API'
+                url = 'https://github.com/klepto/unreflect'
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url = 'https://github.com/klepto/unreflect/blob/master/license'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'klepto'
+                        name = 'Augustinas R.'
+                        email = 'klepto@inbox.lt'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:https://github.com/klepto/unreflect.git'
+                    developerConnection = 'scm:git:https://github.com/klepto/unreflect.git'
+                    url = 'https://github.com/klepto/unreflect'
+                }
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            url "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            if (project.hasProperty('sonatypeUsername') && project.hasProperty('sonatypePassword')) {
+                credentials {
+                    username sonatypeUsername
+                    password sonatypePassword
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}

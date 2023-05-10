@@ -31,3 +31,5 @@ java {
         languageVersion.set(JavaLanguageVersion.of(8))
     }
 }
+
+apply from: 'deploy.gradle'
