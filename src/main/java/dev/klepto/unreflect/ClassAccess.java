@@ -60,16 +60,29 @@ public interface ClassAccess<T> extends Reflectable, Named, Accessible<ClassAcce
     }
 
     /**
-     * Returns a constructor that loosely matches given parameter values or parameter types. This method can be
+     * Returns a constructors that loosely matches given parameter values or parameter types. This method can be
      * either supplied with array of values that you are going to pass to the constructor or array of classes that
      * represent value types. Neither values nor types have to be exact types, as long as they are assignable to a
      * constructor parameters a match will be found. May cause unexpected results with heavy constructor overloading.
      *
      * @param argsOrTypes an array of parameter values or parameter types
-     * @return a constructor that accepts given parameter values or parameter types
+     * @return a stream of constructors that accepts given parameter values or parameter types
      */
+    default StreamEx<ConstructorAccess<T>> constructors(Object... argsOrTypes) {
+        return constructors().filter(constructor -> Parameters.matches(constructor, argsOrTypes));
+    }
+
+    /**
+     * Returns first constructor that loosely matches given parameter values or parameter types, or null if such
+     * constructor is not found in represented class.
+     *
+     * @param argsOrTypes an array of parameter values or parameter types
+     * @return first constructor that accepts given parameter values or parameter types, or null if it's not found
+     * @see ClassAccess#constructors(Object...) 
+     */
+    @Nullable
     default ConstructorAccess<T> constructor(Object... argsOrTypes) {
-        return constructors().findFirst(constructor -> Parameters.matches(constructor, argsOrTypes)).orElse(null);
+        return constructors(argsOrTypes).findFirst().orElse(null);
     }
 
     /**
