@@ -1,5 +1,6 @@
 package dev.klepto.unreflect;
 
+import dev.klepto.unreflect.property.Named;
 import dev.klepto.unreflect.property.Reflectable;
 
 import java.lang.reflect.Constructor;
@@ -11,7 +12,7 @@ import java.lang.reflect.Parameter;
  *
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  */
-public interface ParameterAccess extends Reflectable {
+public interface ParameterAccess extends Reflectable, Named {
 
     /**
      * Reflection representation of the parameter.

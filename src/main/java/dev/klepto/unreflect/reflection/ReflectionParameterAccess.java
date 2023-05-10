@@ -30,6 +30,11 @@ public class ReflectionParameterAccess implements ParameterAccess {
     }
 
     @Override
+    public String name() {
+        return source.getName();
+    }
+
+    @Override
     public ConstructorAccess<?> constructor() {
         return (ConstructorAccess<?>) parent();
     }
@@ -51,7 +56,7 @@ public class ReflectionParameterAccess implements ParameterAccess {
 
     @Override
     public String toString() {
-        return type().toString() + " " + source.getName();
+        return type().toString() + " " + name();
     }
 
 }
