@@ -1,4 +1,5 @@
-# unreflect
+# unreflect 
+[![Maven Central](https://img.shields.io/maven-central/v/dev.klepto.unreflect/unreflect.svg)](https://central.sonatype.com/artifact/dev.klepto.unreflect/unreflect) [![javadoc](https://javadoc.io/badge2/dev.klepto.unreflect/unreflect/javadoc.svg)](https://javadoc.io/doc/dev.klepto.unreflect/unreflect)
 
 Small but dangerously powerful wrapper of Reflection API.
 
@@ -8,6 +9,17 @@ Small but dangerously powerful wrapper of Reflection API.
 * Automatically incorporates methods and fields of super classes and interfaces.
 * Binds API to an instance in order to avoid having to pass around instance parameter.
 * Intuitive and easy to use API.
+## Installation
+```gradle
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "dev.klepto.unreflect:unreflect:1.0"
+}
+```
+
 ## Getting Started
 Creating an instance of a class.
 ```java
@@ -20,7 +32,7 @@ public class HelloClass {
 Unreflect.reflect(HelloClass.class).create("hello from unreflect!");
 ```
 
-Adding and getting element from an array list.
+Adding and getting element from a list.
 ```java
 var list = new ArrayList<String>();
 
@@ -61,3 +73,6 @@ to be significantly faster than Reflection.
 ## Visibility
 Unreflect can access absolutely everything. To achieve this, library contains heavy usage of internal JDK API which means this
 library is not guaranteed to work on different versions of JVM or future updates of JVM.
+## Compatibility
+Library has been tested and confirmed to work with all versions of OpenJDK from OpenJDK 8 to OpenJDK 20.
+Different forks of JVM are not guaranteed to work and are not planned to be maintained.
