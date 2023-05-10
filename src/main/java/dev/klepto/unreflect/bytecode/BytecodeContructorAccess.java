@@ -34,6 +34,11 @@ public class BytecodeContructorAccess<T> implements ConstructorAccess<T> {
         return (T) accessor.invoke(null, args);
     }
 
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
+
     private interface Overrides {
         void unreflect();
 

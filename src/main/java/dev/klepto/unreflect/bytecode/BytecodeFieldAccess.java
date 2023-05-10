@@ -44,6 +44,11 @@ public class BytecodeFieldAccess implements FieldAccess {
         accessor.set(object(), value);
     }
 
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
+
     private interface Overrides {
         void unreflect();
         void reflect();

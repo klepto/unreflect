@@ -14,7 +14,6 @@ import lombok.experimental.Delegate;
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  */
 @RequiredArgsConstructor
-@Getter
 public class BytecodeMethodAccess implements MethodAccess {
 
     @Delegate(excludes = Overrides.class)
@@ -39,6 +38,11 @@ public class BytecodeMethodAccess implements MethodAccess {
     @Override
     public <T> T invoke(Object... args) {
         return (T) accessor.invoke(object(), args);
+    }
+
+    @Override
+    public String toString() {
+        return delegate.toString();
     }
 
     private interface Overrides {

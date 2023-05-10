@@ -60,6 +60,11 @@ public class BytecodeClassAccess<T> implements ClassAccess<T> {
         return delegate.methods().map(Accessible::unreflect);
     }
 
+    @Override
+    public String toString() {
+        return delegate.toString();
+    }
+
     private interface Overrides {
         void unreflect();
         void reflect();
