@@ -30,7 +30,7 @@ public class ReflectionConstructorAccess<T> implements ConstructorAccess<T> {
 
     @Override
     public ConstructorAccess<T> unreflect() {
-        val accessor = AccessorGenerator.getInstance().generateInvokableAccessor(source);
+        val accessor = AccessorGenerator.getInstance().generateInvokableAccessor(parent.type().toClass(), source);
         return new BytecodeContructorAccess<>(this, accessor);
     }
 

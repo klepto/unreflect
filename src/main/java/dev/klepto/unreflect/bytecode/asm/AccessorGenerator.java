@@ -32,7 +32,7 @@ public class AccessorGenerator {
     private final String superClass = JdkInternals.getMagicAccessorImpl().getName();
 
     @SneakyThrows
-    public MutableAccessor generateMutableAccessor(Field field) {
+    public MutableAccessor generateMutableAccessor(Class<?> context, Field field) {
         val className = getNextClassName();
         val cw = new ClassWriter(COMPUTE_MAXS);
         generateHeader(cw, className, MutableAccessor.class.getName());
@@ -86,20 +86,20 @@ public class AccessorGenerator {
         cw.visitEnd();
 
         // Load accessor.
-        val classLoader = field.getDeclaringClass().getClassLoader();
+        val classLoader = context.getClassLoader();
         val bytecode = cw.toByteArray();
         return (MutableAccessor) loadAccessor(classLoader, className, bytecode);
     }
 
-    public InvokableAccessor generateInvokableAccessor(Method method) {
-        return _generateInvokableAccessor(method);
+    public InvokableAccessor generateInvokableAccessor(Class<?> context, Method method) {
+        return _generateInvokableAccessor(context, method);
     }
 
-    public InvokableAccessor generateInvokableAccessor(Constructor<?> constructor) {
-        return _generateInvokableAccessor(constructor);
+    public InvokableAccessor generateInvokableAccessor(Class<?> context, Constructor<?> constructor) {
+        return _generateInvokableAccessor(context, constructor);
     }
 
-    private InvokableAccessor _generateInvokableAccessor(Member member) {
+    private InvokableAccessor _generateInvokableAccessor(Class<?> context, Member member) {
         checkArgument(member instanceof Constructor<?> || member instanceof Method);
 
         val className = getNextClassName();
@@ -179,7 +179,7 @@ public class AccessorGenerator {
         cw.visitEnd();
 
         // Load accessor.
-        val classLoader = member.getDeclaringClass().getClassLoader();
+        val classLoader = context.getClassLoader();
         val bytecode = cw.toByteArray();
         return (InvokableAccessor) loadAccessor(classLoader, className, bytecode);
     }
@@ -197,7 +197,7 @@ public class AccessorGenerator {
 
     public void generateHeader(ClassWriter cw, String className, String interfaceName) {
         cw.visit(
-                V17,
+                V1_8,
                 ACC_PUBLIC,
                 getInternal(className),
                 null,

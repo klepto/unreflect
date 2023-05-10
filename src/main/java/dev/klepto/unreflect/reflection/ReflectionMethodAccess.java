@@ -32,7 +32,7 @@ public class ReflectionMethodAccess implements MethodAccess {
     @Override
     @SneakyThrows
     public MethodAccess unreflect() {
-        val accessor = AccessorGenerator.getInstance().generateInvokableAccessor(source);
+        val accessor = AccessorGenerator.getInstance().generateInvokableAccessor(parent.type().toClass(), source);
         return new BytecodeMethodAccess(this, accessor);
     }
 

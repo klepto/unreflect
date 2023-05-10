@@ -34,7 +34,7 @@ public class ReflectionFieldAccess implements FieldAccess {
 
     @Override
     public FieldAccess unreflect() {
-        val accessor = AccessorGenerator.getInstance().generateMutableAccessor(source);
+        val accessor = AccessorGenerator.getInstance().generateMutableAccessor(parent.type().toClass(), source);
         return new BytecodeFieldAccess(this, accessor);
     }
 
