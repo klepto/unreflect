@@ -5,10 +5,11 @@ Small but dangerously powerful wrapper of Reflection API.
 
 **Notable Features**
 * High performance reflection using runtime bytecode generation.
-* Allows unrestricted access to any modules and members of entire classpath (including internal JDK API).
+* Allows unrestricted access to any modules and members of entire classpath, even if they are private (including internal JDK API).
 * Automatically incorporates methods and fields of super classes and interfaces.
-* Binds API to an instance in order to avoid having to pass around instance parameter.
-* Intuitive and easy to use API.
+* Binds API to an instance, no need to store instances you want to use for reflection.
+* Ability to initialiaze classes without calling their constructor.
+
 ## Installation
 ```gradle
 repositories {
@@ -16,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.klepto.unreflect:unreflect:1.0"
+    implementation "dev.klepto.unreflect:unreflect:1.2"
 }
 ```
 
@@ -75,4 +76,4 @@ Unreflect can access absolutely everything. To achieve this, library contains he
 library is not guaranteed to work on different versions of JVM or future updates of JVM.
 ## Compatibility
 Library has been tested and confirmed to work with all versions of OpenJDK from OpenJDK 8 to OpenJDK 20.
-Different forks of JVM are not guaranteed to work and are not planned to be maintained.
+Different forks of JVM are not guaranteed to work and are not planned to be implemented/maintained.
