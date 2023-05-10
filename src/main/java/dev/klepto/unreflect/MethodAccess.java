@@ -23,4 +23,13 @@ public interface MethodAccess extends Reflectable, Invokable, Named, Accessible<
      */
     Method source();
 
+    /**
+     * Returns the type that declares this member.
+     *
+     * @return the unreflect type that declares this member
+     */
+    default UnreflectType declaringType() {
+        return UnreflectType.of(source().getDeclaringClass());
+    }
+
 }

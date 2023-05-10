@@ -24,6 +24,18 @@ public interface ParameterAccess extends Reflectable, Named {
     Parameter source();
 
     /**
+     * Returns the type that declares this member.
+     *
+     * @return the unreflect type that declares this member
+     */
+    default UnreflectType declaringType() {
+        if (parent() instanceof ConstructorAccess) {
+            return constructor().declaringType();
+        }
+        return method().declaringType();
+    }
+
+    /**
      * Returns the constructor that contains this parameter.
      *
      * @return the constructor containing this parameter

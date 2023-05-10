@@ -24,6 +24,15 @@ public interface ClassAccess<T> extends Reflectable, Named, Accessible<ClassAcce
     Class<T> source();
 
     /**
+     * Returns the type that declares this member.
+     *
+     * @return the unreflect type that declares this member
+     */
+    default UnreflectType declaringType() {
+        return UnreflectType.of(source().getDeclaringClass());
+    }
+
+    /**
      * Creates a new instance of a class, using runtime constructor lookup based on given parameter arguments.
      *
      * @param args the constructor arguments

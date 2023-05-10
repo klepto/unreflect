@@ -23,6 +23,15 @@ public interface ConstructorAccess<T> extends Reflectable, Invokable, Accessible
     Constructor<T> source();
 
     /**
+     * Returns the type that declares this member.
+     *
+     * @return the unreflect type that declares this member
+     */
+    default UnreflectType declaringType() {
+        return UnreflectType.of(source().getDeclaringClass());
+    }
+
+    /**
      * Invokes constructor with given argument values and returns the new instance of the class.
      *
      * @param args the constructor arguments

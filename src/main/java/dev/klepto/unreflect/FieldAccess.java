@@ -23,4 +23,13 @@ public interface FieldAccess extends Reflectable, Mutable, Named, Accessible<Fie
      */
     Field source();
 
+    /**
+     * Returns the type that declares this member.
+     *
+     * @return the unreflect type that declares this member
+     */
+    default UnreflectType declaringType() {
+        return UnreflectType.of(source().getDeclaringClass());
+    }
+
 }
