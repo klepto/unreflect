@@ -32,7 +32,7 @@ public class Parameters {
         }
 
         val isTypes = StreamEx.of(argsOrTypes).allMatch(value -> value instanceof Class);
-        for (var i = 0; i < parameters.size(); i++) {
+        for (int i = 0; i < parameters.size(); i++) {
             val value = isTypes ? argsOrTypes[i] : argsOrTypes[i].getClass();
             if (!parameters.get(i).type().matches(value)) {
                 return false;

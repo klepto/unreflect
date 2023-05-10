@@ -139,7 +139,7 @@ public class AccessorGenerator {
 
             mv.visitTypeInsn(NEW, constructorOwner);
             mv.visitInsn(DUP);
-            for (var i = 0; i < constructorParameters.length; i++) {
+            for (int i = 0; i < constructorParameters.length; i++) {
                 val parameter = constructorParameters[i];
                 generateArrayParameter(mv, 2, i, parameter.getType());
             }
@@ -159,7 +159,7 @@ public class AccessorGenerator {
                 mv.visitTypeInsn(CHECKCAST, methodOwner);
             }
 
-            for (var i = 0; i < methodParameters.length; i++) {
+            for (int i = 0; i < methodParameters.length; i++) {
                 val parameter = methodParameters[i];
                 generateArrayParameter(mv, 2, i, parameter.getType());
             }

@@ -40,9 +40,9 @@ public class JdkInternals {
         methodA.setAccessible(true);
         methodB.setAccessible(false);
 
-        for (var index = 0; index < Byte.MAX_VALUE; index++) {
-            val valueA = unsafe.getBoolean(methodA, index);
-            val valueB = unsafe.getBoolean(methodB, index);
+        for (int index = 0; index < Byte.MAX_VALUE; index++) {
+            val valueA = (boolean) unsafe.getBoolean(methodA, index);
+            val valueB = (boolean) unsafe.getBoolean(methodB, index);
             if (valueA != valueB) {
                 return index;
             }
@@ -71,7 +71,7 @@ public class JdkInternals {
     }
 
     private static Class<?> findClassDefiner() {
-        var classDefiner = getClass("jdk.internal.reflect.ClassDefiner");
+        Class<?> classDefiner = getClass("jdk.internal.reflect.ClassDefiner");
         if (classDefiner == null) {
             classDefiner = getClass("sun.reflect.ClassDefiner");
         }
@@ -92,7 +92,7 @@ public class JdkInternals {
     }
 
     private static Class<?> findMagicAccessorImpl() {
-        var magicAccessorImpl = getClass("jdk.internal.reflect.MagicAccessorImpl");
+        Class<?> magicAccessorImpl = getClass("jdk.internal.reflect.MagicAccessorImpl");
         if (magicAccessorImpl == null) {
             magicAccessorImpl = getClass("sun.reflect.MagicAccessorImpl");
         }

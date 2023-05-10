@@ -99,7 +99,7 @@ public class UnreflectType implements Named {
      */
     public StreamEx<UnreflectType> superTypes() {
         val result = new ArrayList<UnreflectType>();
-        var superType = (UnreflectType) this;
+        UnreflectType superType = this;
         while ((superType = superType.superType()) != null) {
             result.add(superType);
         }
