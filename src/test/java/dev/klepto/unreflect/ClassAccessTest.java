@@ -18,6 +18,8 @@ import java.util.function.Predicate;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Tests for {@link ClassAccess}.
+ *
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  */
 public class ClassAccessTest {

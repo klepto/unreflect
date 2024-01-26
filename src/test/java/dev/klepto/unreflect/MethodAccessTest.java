@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
+ * Tests for {@link MethodAccess}.
+ *
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  */
 public class MethodAccessTest {
