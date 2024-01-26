@@ -51,7 +51,7 @@ public class ReflectionParameterAccess implements ParameterAccess {
 
     @Override
     public UnreflectType type() {
-        return UnreflectType.of(source.getParameterizedType());
+        return UnreflectType.of(source);
     }
 
     @Override

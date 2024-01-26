@@ -72,7 +72,7 @@ public class ReflectionFieldAccess implements FieldAccess {
 
     @Override
     public UnreflectType type() {
-        return UnreflectType.of(source.getGenericType());
+        return UnreflectType.of(source);
     }
 
     @Override

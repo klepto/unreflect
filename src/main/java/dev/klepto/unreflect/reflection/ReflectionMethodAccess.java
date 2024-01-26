@@ -75,7 +75,7 @@ public class ReflectionMethodAccess implements MethodAccess {
 
     @Override
     public UnreflectType type() {
-        return UnreflectType.of(source.getGenericReturnType());
+        return UnreflectType.of(source);
     }
 
     @Override

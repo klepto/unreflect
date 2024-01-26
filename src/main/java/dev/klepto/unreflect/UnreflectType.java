@@ -7,8 +7,7 @@ import lombok.val;
 import one.util.streamex.StreamEx;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 
 /**
@@ -260,10 +259,40 @@ public class UnreflectType implements Named {
     }
 
     /**
+     * Creates a type representation for a given {@link java.lang.reflect.Parameter}.
+     *
+     * @param parameter the reflective parameter
+     * @return the type representation of a given reflective parameter
+     */
+    public static UnreflectType of(Parameter parameter) {
+        return of(TypeToken.of(parameter.getParameterizedType()));
+    }
+
+    /**
+     * Creates a type representation for a given {@link java.lang.reflect.Method}.
+     *
+     * @param method the reflective method
+     * @return the type representation of a given reflective method
+     */
+    public static UnreflectType of(Method method) {
+        return of(TypeToken.of(method.getReturnType()));
+    }
+
+    /**
+     * Creates a type representation for a given {@link java.lang.reflect.Field}.
+     *
+     * @param field the reflective field
+     * @return the type representation of a given reflective field
+     */
+    public static UnreflectType of(Field field) {
+        return of(TypeToken.of(field.getGenericType()));
+    }
+
+    /**
      * Creates a type representation for a given {@link Type}.
      *
      * @param type the reflection type
-     * @return the type representation of a given reflection type
+     * @return the type representation of a given reflective type
      */
     public static UnreflectType of(Type type) {
         return of(TypeToken.of(type));
