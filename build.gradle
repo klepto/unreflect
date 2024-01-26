@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
 }
 
 group 'dev.klepto.unreflect'
@@ -13,9 +13,9 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
 
-    implementation 'one.util:streamex:0.8.1'
+    api 'one.util:streamex:0.8.1'
     implementation 'org.ow2.asm:asm:9.4'
-    implementation 'com.google.guava:guava:31.1-jre'
+    implementation 'com.google.guava:guava:32.0.0-jre'
 
     testImplementation 'org.projectlombok:lombok:1.18.26'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.26'
