@@ -142,6 +142,10 @@ public class UnreflectType implements Named {
      * @return a stream containing generic types associated with this type
      */
     public StreamEx<UnreflectType> genericTypes() {
+        if (!(typeToken.getType() instanceof ParameterizedType)) {
+            return StreamEx.empty();
+        }
+
         val parameterizedType = (ParameterizedType) typeToken.getType();
         return StreamEx.of(parameterizedType.getActualTypeArguments()).map(UnreflectType::of);
     }
@@ -244,7 +248,10 @@ public class UnreflectType implements Named {
     public String toString() {
         val type = isArray() ? componentType() : this;
         val simpleName = type.toClass().getSimpleName();
-        return simpleName + (isArray() ? "[]" : "");
+        val generics = genericTypes().joining(",");
+        val genericSuffix = generics.isEmpty() ? "" : "<" + generics + ">";
+        val arraySuffix = isArray() ? "[]" : "";
+        return simpleName + genericSuffix + arraySuffix;
     }
 
     @Override
