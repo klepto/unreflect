@@ -106,6 +106,27 @@ public class UnreflectType implements Named {
     }
 
     /**
+     * Returns the first subtype of this type, or null if this type doesn't have any subtypes.
+     *
+     * @return the first subtype of this type
+     */
+    @Nullable
+    public UnreflectType subType() {
+        return subTypes().findFirst().orElse(null);
+    }
+
+    /**
+     * Returns the subtype of this type at given index, or null if subtype at given depth doesn't exist.
+     *
+     * @param index the subtype index
+     * @return the subtype at a given depth
+     */
+    @Nullable
+    public UnreflectType subType(int index) {
+        return subTypes().skip(index).findFirst().orElse(null);
+    }
+
+    /**
      * Returns a stream of all implemented types, this includes both super classes and implemented interfaces.
      *
      * @return a stream containing all implemented types
@@ -126,7 +147,7 @@ public class UnreflectType implements Named {
     }
 
     /**
-     * Returns the first generic type associated with this type, or null if this type has no associated generics
+     * Returns the first generic type associated with this type, or null if this type has no associated generics.
      *
      * @return the first generic type associated with this type, or null if unavailable
      */
@@ -148,7 +169,8 @@ public class UnreflectType implements Named {
     }
 
     /**
-     * Returns a component type of this type, or null if this type has no component type. Only applicable to array types.
+     * Returns a component type of this type, or null if this type has no component type. Only applicable to array
+     * types.
      *
      * @return the component type of this array type, or null if no component type present
      * @see UnreflectType#isArray()
@@ -227,7 +249,10 @@ public class UnreflectType implements Named {
 
     @Override
     public boolean equals(Object object) {
-        return typeToken.equals(object);
+        if (!(object instanceof UnreflectType)) {
+            return false;
+        }
+        return typeToken.equals(((UnreflectType) object).typeToken);
     }
 
     @Override
