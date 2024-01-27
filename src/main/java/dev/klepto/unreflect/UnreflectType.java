@@ -189,17 +189,24 @@ public class UnreflectType implements Named {
     }
 
     /**
-     * Checks if this type matches the given value or type.
+     * Loosely checks if this type matches the given value or type.
      *
      * @param object the value or type
-     * @return true if this type is assignable for a given value or type
+     * @return true if this type is assignable as a given type
      */
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean matches(Object object) {
-        return typeToken.isSupertypeOf(of(object).toClass());
+        if (object == null) {
+            return false;
+        }
+
+        return subTypes()
+                .map(UnreflectType::toClass)
+                .has((Class) of(object).toClass());
     }
 
     /**
-     * Checks if this type class matches the given value or type class.
+     * Checks if this type class matches the class of given value.
      *
      * @param object the value or type
      * @return true if this type class is the class of given value or type
