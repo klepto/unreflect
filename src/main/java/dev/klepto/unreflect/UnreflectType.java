@@ -302,14 +302,14 @@ public class UnreflectType implements Named {
     public static UnreflectType of(Object object) {
         if (object instanceof Class<?>) {
             return of((Class<?>) object);
-        }
-
-        if (object instanceof Type) {
+        } else if (object instanceof Type) {
             return of((Type) object);
-        }
-
-        if (object instanceof TypeToken<?>) {
-            return of((TypeToken<?>) object);
+        } else if (object instanceof Parameter) {
+            return of((Parameter) object);
+        } else if (object instanceof Method) {
+            return of((Method) object);
+        } else if (object instanceof Field) {
+            return of((Field) object);
         }
 
         return of(object.getClass());
