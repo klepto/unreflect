@@ -233,7 +233,6 @@ public class UnreflectType implements Named {
         return typeToken.isPrimitive();
     }
 
-
     /**
      * Returns the corresponding wrapper type if this is a primitive type, otherwise returns itself.
      *
@@ -333,7 +332,7 @@ public class UnreflectType implements Named {
      * @return the type representation of a given reflective method
      */
     public static UnreflectType of(Method method) {
-        return of(TypeToken.of(method.getReturnType()));
+        return of(TypeToken.of(method.getGenericReturnType()));
     }
 
     /**
