@@ -8,16 +8,16 @@ import one.util.streamex.StreamEx;
 
 import javax.annotation.Nullable;
 import java.lang.reflect.*;
-import java.util.ArrayList;
 
 /**
  * A wrapper for java types enabling simple generic lookup, instance allocation and superclass and subtype resolving.
  *
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public class UnreflectType implements Named {
 
-    @SuppressWarnings("rawtypes")
+
     private final TypeToken typeToken;
 
     private UnreflectType(TypeToken<?> typeToken) {
@@ -50,7 +50,6 @@ public class UnreflectType implements Named {
      * @param <T> generic type for automatic return value casting
      * @return a new instance of this type
      */
-    @SuppressWarnings("unchecked")
     public <T> T allocate() {
         return (T) JdkInternals.allocateInstance(toClass());
     }
@@ -71,7 +70,6 @@ public class UnreflectType implements Named {
      * @return the superclass type, or null if superclass doesn't exist
      */
     @Nullable
-    @SuppressWarnings("unchecked")
     public UnreflectType superType() {
         val superClass = toClass().getSuperclass();
         if (superClass == null) {
@@ -100,12 +98,9 @@ public class UnreflectType implements Named {
      * @return a stream containing all superclass types
      */
     public StreamEx<UnreflectType> superTypes() {
-        val result = new ArrayList<UnreflectType>();
-        UnreflectType superType = this;
-        while ((superType = superType.superType()) != null) {
-            result.add(superType);
-        }
-        return StreamEx.of(result);
+        return StreamEx.of(typeToken.getTypes().classes())
+                .skip(1)
+                .map(UnreflectType::of);
     }
 
     /**
@@ -198,7 +193,6 @@ public class UnreflectType implements Named {
      * @param object the value or type
      * @return true if this type is assignable as a given type
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean matches(Object object) {
         if (object == null) {
             return false;
@@ -308,6 +302,8 @@ public class UnreflectType implements Named {
             return of((Class<?>) object);
         } else if (object instanceof Type) {
             return of((Type) object);
+        }  else if (object instanceof TypeToken) {
+            return of((TypeToken) object);
         } else if (object instanceof Parameter) {
             return of((Parameter) object);
         } else if (object instanceof Method) {
