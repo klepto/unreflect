@@ -233,6 +233,25 @@ public class UnreflectType implements Named {
         return typeToken.isPrimitive();
     }
 
+
+    /**
+     * Returns the corresponding wrapper type if this is a primitive type, otherwise returns itself.
+     *
+     * @return the corresponding wrapper type
+     */
+    public UnreflectType wrap() {
+        return of(typeToken.wrap());
+    }
+
+    /**
+     * Returns the corresponding primitive type if this is a wrapper type, otherwise returns itself.
+     *
+     * @return the corresponding primitive type
+     */
+    public UnreflectType unwrap() {
+        return of(typeToken.unwrap());
+    }
+
     /**
      * Returns {@link Type} representation of this type.
      *
@@ -275,8 +294,8 @@ public class UnreflectType implements Named {
     }
 
     /**
-     * Creates a type representation of a given value, value can be class, type, typetoken or just a regular value in
-     * which case it's class is going to be used as type.
+     * Creates a type representation of a given value, value can be {@link Class}, {@link Type}, {@link TypeToken} or
+     * just a regular value in which case it's class is going to be used as type.
      *
      * @param object the value
      * @return the type representation of a given value
