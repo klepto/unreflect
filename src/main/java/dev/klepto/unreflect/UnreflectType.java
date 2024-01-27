@@ -133,7 +133,8 @@ public class UnreflectType implements Named {
     }
 
     /**
-     * Returns a stream of all implemented types, this includes both super classes and implemented interfaces.
+     * Returns a stream of all types that this type can be cast to. This includes all super classes and all implemented
+     * interfaces.
      *
      * @return a stream containing all implemented types
      */
@@ -317,7 +318,7 @@ public class UnreflectType implements Named {
             return of((Class<?>) object);
         } else if (object instanceof Type) {
             return of((Type) object);
-        }  else if (object instanceof TypeToken) {
+        } else if (object instanceof TypeToken) {
             return of((TypeToken) object);
         } else if (object instanceof Parameter) {
             return of((Parameter) object);
