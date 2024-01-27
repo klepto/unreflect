@@ -17,6 +17,7 @@ import java.util.ArrayList;
  */
 public class UnreflectType implements Named {
 
+    @SuppressWarnings("rawtypes")
     private final TypeToken typeToken;
 
     private UnreflectType(TypeToken<?> typeToken) {
@@ -49,6 +50,7 @@ public class UnreflectType implements Named {
      * @param <T> generic type for automatic return value casting
      * @return a new instance of this type
      */
+    @SuppressWarnings("unchecked")
     public <T> T allocate() {
         return (T) JdkInternals.allocateInstance(toClass());
     }
@@ -69,6 +71,7 @@ public class UnreflectType implements Named {
      * @return the superclass type, or null if superclass doesn't exist
      */
     @Nullable
+    @SuppressWarnings("unchecked")
     public UnreflectType superType() {
         val superClass = toClass().getSuperclass();
         if (superClass == null) {
@@ -131,6 +134,7 @@ public class UnreflectType implements Named {
      *
      * @return a stream containing all implemented types
      */
+    @SuppressWarnings("unchecked")
     public StreamEx<UnreflectType> subTypes() {
         return StreamEx.of(typeToken.getTypes()).map(UnreflectType::of);
     }
