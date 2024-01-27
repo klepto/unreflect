@@ -280,6 +280,15 @@ public class UnreflectType implements Named {
     }
 
     /**
+     * Checks if this type is an interface type.
+     *
+     * @return true if this type is an interface type
+     */
+    public boolean isInterface() {
+        return toClass().isInterface();
+    }
+
+    /**
      * Returns the corresponding wrapper type if this is a primitive type, otherwise returns itself.
      *
      * @return the corresponding wrapper type
