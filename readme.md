@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-    implementation "dev.klepto.unreflect:unreflect:1.2"
+    implementation "dev.klepto.unreflect:unreflect:1.4"
 }
 ```
 
