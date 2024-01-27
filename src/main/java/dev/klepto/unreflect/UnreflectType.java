@@ -89,7 +89,10 @@ public class UnreflectType implements Named {
      */
     @Nullable
     public UnreflectType superType(int index) {
-        return superTypes().skip(index).findFirst().orElse(null);
+        return superTypes()
+                .skip(index)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -110,7 +113,9 @@ public class UnreflectType implements Named {
      */
     @Nullable
     public UnreflectType subType() {
-        return subTypes().findFirst().orElse(null);
+        return subTypes()
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -121,7 +126,10 @@ public class UnreflectType implements Named {
      */
     @Nullable
     public UnreflectType subType(int index) {
-        return subTypes().skip(index).findFirst().orElse(null);
+        return subTypes()
+                .skip(index)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -131,7 +139,9 @@ public class UnreflectType implements Named {
      */
     @SuppressWarnings("unchecked")
     public StreamEx<UnreflectType> subTypes() {
-        return StreamEx.of(typeToken.getTypes()).map(UnreflectType::of);
+        return StreamEx
+                .of(typeToken.getTypes())
+                .map(UnreflectType::of);
     }
 
     /**
@@ -156,7 +166,9 @@ public class UnreflectType implements Named {
      */
     @Nullable
     public UnreflectType genericType() {
-        return genericTypes().findFirst().orElse(null);
+        return genericTypes()
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -168,7 +180,10 @@ public class UnreflectType implements Named {
      * @return the generic type at a given slot
      */
     public UnreflectType genericType(int index) {
-        return genericTypes().skip(index).findFirst().orElse(null);
+        return genericTypes()
+                .skip(index)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
