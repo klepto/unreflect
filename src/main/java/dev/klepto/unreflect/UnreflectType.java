@@ -71,13 +71,9 @@ public class UnreflectType implements Named {
      */
     @Nullable
     public UnreflectType superType() {
-        val superClass = toClass().getSuperclass();
-        if (superClass == null) {
-            return null;
-        }
-
-        val superTypeToken = typeToken.getSupertype(superClass);
-        return UnreflectType.of(superTypeToken);
+        return superTypes()
+                .findFirst()
+                .orElse(null);
     }
 
     /**
