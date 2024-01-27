@@ -130,14 +130,50 @@ public class UnreflectType implements Named {
 
     /**
      * Returns a stream of all types that this type can be cast to. This includes all super classes and all implemented
-     * interfaces.
+     * interfaces. Includes all types where {@link Class#isAssignableFrom(Class)} would return <code>true</code>.
+     *
+     * @return a stream containing all implemented or extended types
+     */
+    @SuppressWarnings("unchecked")
+    public StreamEx<UnreflectType> subTypes() {
+        return StreamEx.of(typeToken.getTypes())
+                .map(UnreflectType::of);
+    }
+
+    /**
+     * Returns the first interface type of this type, or null if this type doesn't have any interfaces.
+     *
+     * @return the first interface type of this type
+     */
+    @Nullable
+    public UnreflectType interfaceType() {
+        return interfaceTypes()
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Returns the interface type of this type at given index, or null if interface type at given depth doesn't exist.
+     *
+     * @param index the interface type index
+     * @return the interface type at a given depth
+     */
+    @Nullable
+    public UnreflectType interfaceType(int index) {
+        return interfaceTypes()
+                .skip(index)
+                .findFirst()
+                .orElse(null);
+    }
+
+    /**
+     * Returns a stream of all interface types that this type can be cast to.
      *
      * @return a stream containing all implemented types
      */
     @SuppressWarnings("unchecked")
-    public StreamEx<UnreflectType> subTypes() {
-        return StreamEx
-                .of(typeToken.getTypes())
+    public StreamEx<UnreflectType> interfaceTypes() {
+        return StreamEx.of(typeToken.getTypes().interfaces())
                 .map(UnreflectType::of);
     }
 
