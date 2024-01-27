@@ -1,6 +1,7 @@
 package dev.klepto.unreflect.util;
 
 import dev.klepto.unreflect.ParameterAccess;
+import dev.klepto.unreflect.UnreflectType;
 import dev.klepto.unreflect.property.Invokable;
 import lombok.val;
 import one.util.streamex.StreamEx;
@@ -22,23 +23,22 @@ public class Parameters {
      * methods by using either values or value types.
      *
      * @param invokable   the invokable
-     * @param argsOrTypes an array of parameter values or parameter types
+     * @param args an array of parameter values or parameter types
      * @return true if invokable parameters match given parameter values or types
      */
-    public static boolean matches(Invokable invokable, Object[] argsOrTypes) {
+    public static boolean matches(Invokable invokable, Object[] args) {
         val parameters = invokable.parameters().toList();
-        if (parameters.size() != argsOrTypes.length) {
+        if (parameters.size() != args.length) {
             return false;
         }
 
-        val isTypes = StreamEx.of(argsOrTypes).allMatch(value -> value instanceof Class);
         for (int i = 0; i < parameters.size(); i++) {
-            val value = isTypes ? argsOrTypes[i] : argsOrTypes[i].getClass();
-            if (!parameters.get(i).type().matches(value)) {
+            val parameterType = parameters.get(i).type();
+            val argType = UnreflectType.of(args[i]);
+            if (!argType.matches(parameterType)) {
                 return false;
             }
         }
-
         return true;
     }
 

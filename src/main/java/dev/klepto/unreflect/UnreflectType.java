@@ -355,7 +355,9 @@ public class UnreflectType implements Named {
      * @return the type representation of a given value
      */
     public static UnreflectType of(Object object) {
-        if (object instanceof Class<?>) {
+        if (object instanceof UnreflectType) {
+            return (UnreflectType) object;
+        } else if (object instanceof Class<?>) {
             return of((Class<?>) object);
         } else if (object instanceof Type) {
             return of((Type) object);
