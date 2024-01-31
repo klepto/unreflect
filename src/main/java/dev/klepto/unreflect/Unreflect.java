@@ -21,7 +21,10 @@ import java.lang.reflect.Parameter;
  * @author <a href="http://github.com/klepto">Augustinas R.</a>
  * @see <a href="https://github.com/klepto/unreflect">GitHub Repository</a>
  */
-public class Unreflect {
+public final class Unreflect {
+
+    private Unreflect() {
+    }
 
     /**
      * Creates {@link ClassAccess} for a given object which generates bytecode for accessing its members. This method
