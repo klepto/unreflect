@@ -2,7 +2,6 @@ package dev.klepto.unreflect;
 
 import dev.klepto.unreflect.property.Accessible;
 import dev.klepto.unreflect.reflection.ReflectionClassAccess;
-import dev.klepto.unreflect.util.JdkInternals;
 import lombok.SneakyThrows;
 import lombok.val;
 
@@ -59,6 +58,7 @@ public class Unreflect {
      * @return a class accessor that will use code-generation rather than reflection for accessing members
      * @see Unreflect#reflect(Class)
      */
+    @SuppressWarnings("unchecked")
     public static <T> ClassAccess<T> reflect(T targetObject) {
         val targetClass = (Class<T>) targetObject.getClass();
         return reflect(targetClass).bind(targetObject);
